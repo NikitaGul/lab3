@@ -1,0 +1,30 @@
+{% extends "servers/base.html" %}
+
+{% block title %}Server list{% endblock %}
+
+{% block content %}
+{% load socialaccount %}
+    <h1 class="mb-4">Server list</h1>
+    <ul class="list-group">
+        {% for server in servers %}
+            <li>
+                <a href="{% url 'server_detail' server.id %}">
+                    {{ server.name }}
+                </a>
+            </li>
+            {% empty %}
+        <li class="list-group-item">Servers list is empt</li>
+        {% endfor %}
+    </ul>
+{% if user.is_authenticated %}
+  <p>You are loggined {{ user.username }}.</p>
+  <a href="{% url 'secure' %}">To safe page</a><br>
+  <form action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-link">Logout</button>
+</form>
+{% else %}
+  <a href="{% url 'login' %}">Sing in</a>
+  <a href="{% provider_login_url 'google' %}">Login with Google</a>
+{% endif %}
+{% endblock %}

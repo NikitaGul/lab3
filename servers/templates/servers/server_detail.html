@@ -1,0 +1,16 @@
+{% extends "servers/base.html" %}
+
+{% block title %}Server {{server.id}}{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Server details: {{ server.name }}</h1>
+    <ul class="list-group">
+        <li class="list-group-item">Time: {{ server.alert_time }}</li>
+        <li class="list-group-item">Type: {{ server.get_notification_type_display }}</li>
+        <li class="list-group-item">Email: {{ server.email }}</li>
+        <li class="list-group-item">Group server: {{ server.server_group }}</li>
+        <li class="list-group-item">Type server: {{ server.server_group_type }}</li>
+        <li class="list-group-item">Location: {{ server.location }}</li>
+    </ul>
+    <a class="btn btn-secondary" href="{% url 'server_list' %}">Back to the list</a>
+{% endblock %}

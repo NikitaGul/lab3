@@ -1,0 +1,9 @@
+{% extends "servers/base.html" %}
+{% block content %}
+<h2>This page is secured</h2>
+<p>Hello, {{ user.username }}!</p>
+<form action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-link">Logout</button>
+</form>
+{% endblock %}
