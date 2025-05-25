@@ -1,0 +1,42 @@
+{% extends "servers/base.html" %}
+
+{% block title %}CSV Upload and View{% endblock %}
+
+{% block content %}
+<h1>Upload CSV file</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv" required>
+    <button type="submit" class="btn btn-primary my-2">Upload</button>
+</form>
+
+<form method="post" action="{% url 'csv_delete' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger mt-3">Delete CSV File</button>
+</form>
+
+{% if rows %}
+    <h2>CSV Content:</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                {% for header in rows.0 %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows|slice:"1:" %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No CSV file uploaded yet.</p>
+{% endif %}
+{% endblock %}

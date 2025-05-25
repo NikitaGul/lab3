@@ -11,6 +11,15 @@
                 <a href="{% url 'server_detail' server.id %}">
                     {{ server.name }}
                 </a>
+                {% if user.is_authenticated %}
+            <form action="{% url 'delete_server' server.id %}" method="post" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm" 
+                        onclick="return confirm('delete server {{ server.name }}?')">
+                    Delete
+                </button>
+            </form>
+            {% endif %}
             </li>
             {% empty %}
         <li class="list-group-item">Servers list is empt</li>
@@ -27,4 +36,54 @@
   <a href="{% url 'login' %}">Sing in</a>
   <a href="{% provider_login_url 'google' %}">Login with Google</a>
 {% endif %}
+<form method="get" action="" class="mb-4 d-flex align-items-center gap-2">
+    <label for="server_id_input" class="form-label mb-0">Write ID</label>
+    <input type="number" id="server_id_input" name="server_id" class="form-control" min="1" required style="width: 100px;">
+    <button type="submit">Show Details</button>
+</form>
+<form method="get">
+    <button type="submit" name="show_all" value="1" class="btn btn-primary mt-3">Show all names and ids</button>
+</form>
+
+{% if request.GET.show_all %}
+    <h2 class="mt-4">All servers:</h2>
+    <ul class="list-group">
+        {% for server in servers %}
+            <li class="list-group-item">
+                ID: {{ server.id }} — {{ server.name }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<h2 class="mt-5">Create new server (test)</h2>
+<form method="post" action="/api/servers/create/">
+    {% csrf_token %}
+    <input name="name" placeholder="Name" class="form-control my-2" required>
+    <input type="time" name="alert_time" class="form-control my-2" required>
+    <select name="notification_type" class="form-control my-2">
+        <option value="email">Email</option>
+        <option value="sms">SMS</option>
+        <option value="push">Push-message</option>
+    </select>
+    <input type="email" name="email" placeholder="Email" class="form-control my-2" required>
+    <input name="server_group" placeholder="Group" class="form-control my-2" required>
+    <input name="server_group_type" placeholder="Group type" class="form-control my-2" required>
+    <input name="location" placeholder="Location" class="form-control my-2" required>
+    <button type="submit" class="btn btn-success">Create Server</button>
+</form>
+
+<a href="{% url 'csv_view' %}" class="btn btn-info mt-2">View Uploaded CSV</a>
+
+<!-- <form method="get" action="/api/servers/">
+    <div class="form-group">
+        <label for="server_id">ID server</label>
+        <input type="number" name="server_id" id="server_id" class="form-control" required>
+    </div>
+    <button type="submit" formaction="" class="btn btn-primary mt-2"
+        onclick="this.form.action = '/api/servers/' + document.getElementById('server_id').value + '/'">
+        Show
+    </button>
+</form> -->
+
 {% endblock %}
